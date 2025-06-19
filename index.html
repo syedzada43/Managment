@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Management Suite - Unique Science Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #F0F8FF;
+            --text-color: #333;
+            --border-color: #ccc;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Main Container & Page Layout */
+        .main-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Tab Navigation */
+        .nav-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            position: relative;
+            color: #555;
+            transition: color 0.3s;
+        }
+        .nav-tab:hover { color: var(--primary-color); }
+        .nav-tab.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        /* Page Content Styling */
+        .page-content {
+            display: none; /* Hide all pages by default */
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        .page-content.active {
+            display: block; /* Show only the active page */
+        }
+        
+        /* Shared Page Header with Logo */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        .page-header h2 {
+            margin: 0; 
+            text-align: left;
+        }
+        .page-logo {
+            width: 60px;
+            height: 60px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* Form & Grid Styling */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 8px; font-weight: 500; color: #555; }
+        input[type="text"], input[type="number"], input[type="date"], input[type="month"], input[type="tel"], input[type="time"] {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .action-button {
+            padding: 15px;
+            background: linear-gradient(45deg, #005A9C, #007BFF);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Data Table Styling */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .data-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Footer Credit */
+        .page-footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #aaa;
+        }
+        
+        /* Attendance Specific Styles */
+        .attendance-form-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        /* Voucher Styling (Copied from original) */
+        #voucher-output { display: none; margin-top: 30px; }
+        .voucher-printable-area { display: flex; gap: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px; }
+        .voucher-copy { width: 50%; border: 2px dashed var(--border-color); padding: 15px; display: flex; flex-direction: column; }
+        .voucher-header { display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .voucher-header img { width: 60px; height: 60px; }
+        .voucher-header .academy-info { text-align: center; flex-grow: 1; }
+        .voucher-header h3 { margin: 0; color: var(--primary-color); font-size: 1.4rem; }
+        .voucher-header p { margin: 0; font-size: 0.9rem; }
+        .voucher-title { text-align: center; font-weight: 600; background-color: var(--secondary-color); padding: 5px; border-radius: 5px; margin-bottom: 15px; }
+        .details-table, .fee-table { width: 100%; border-collapse: collapse; }
+        .details-table { margin-bottom: 20px; }
+        .fee-table { margin-top: auto; }
+        .details-table td, .fee-table td { padding: 8px; border: 1px solid #e0e0e0; font-size: 0.9rem; }
+        .details-table td:first-child { font-weight: 600; width: 35%; }
+        .total-row { font-weight: 700; background-color: var(--secondary-color); color: var(--primary-color); }
+        .voucher-footer { margin-top: 30px; font-size: 0.8rem; color: #555; text-align: center; }
+        .signature-area { border-top: 1px solid #000; padding-top: 5px; margin-top: 40px; font-weight: 600; text-align: center; }
+        #print-btn { display: none; }
+
+
+        /* Print Styles */
+        @media print {
+            @page { size: A4 landscape; margin: 1cm; }
+            body { padding: 0; margin: 0; }
+            .main-container, .nav-tabs { display: none; }
+            
+            #voucher-page { display: block !important; box-shadow: none; padding: 0; }
+            #voucher-form-container, #print-btn-container, .page-footer, .page-header { display: none; }
+            
+            #voucher-output { display: block !important; margin: 0; }
+            .voucher-printable-area { flex-direction: row; gap: 2%; border: none; padding: 0; align-items: flex-start; }
+            .voucher-copy { width: 49%; box-sizing: border-box; border: 2px solid #000; page-break-inside: avoid; font-size: 0.85rem; }
+            .voucher-copy .voucher-header h3 { font-size: 1.2rem; }
+            .voucher-copy .voucher-header p { font-size: 0.8rem; }
+            .voucher-copy .details-table td, .voucher-copy .fee-table td { font-size: 0.8rem; padding: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>Unique Science Academy - Management Suite</h1>
+        
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-target="voucher-page">Fee Voucher</button>
+            <button class="nav-tab" data-target="students-db-page">Student Database</button>
+            <button class="nav-tab" data-target="teachers-db-page">Teachers Database</button>
+            <button class="nav-tab" data-target="attendance-page">Teacher Attendance</button>
+        </nav>
+
+        <!-- =========== VOUCHER GENERATOR PAGE =========== -->
+        <div id="voucher-page" class="page-content active">
+            <div id="voucher-form-container">
+                <h2>Generate Fee Voucher</h2>
+                <form id="voucher-form">
+                    <div class="form-grid">
+                        <div class="form-group"><label for="studentName">Student Name</label><input type="text" id="studentName" required></div>
+                        <div class="form-group"><label for="fatherName">Father Name</label><input type="text" id="fatherName" required></div>
+                        <div class="form-group"><label for="rollNumber">Roll Number</label><input type="text" id="rollNumber" required></div>
+                        <div class="form-group"><label for="month">Fee Month</label><input type="month" id="month" required></div>
+                        <div class="form-group"><label for="dueDate">Due Date</label><input type="date" id="dueDate" required></div>
+                        <div class="form-group"><label for="fees">Tuition Fees (PKR)</label><input type="number" id="fees" required></div>
+                        <div class="form-group"><label for="scholarship">Scholarship (PKR)</label><input type="number" id="scholarship" value="0" required></div>
+                        <div class="form-group"><label for="fine">Fine (PKR)</label><input type="number" id="fine" value="0" required></div>
+                    </div>
+                    <button type="submit" class="action-button">Generate Voucher</button>
+                </form>
+            </div>
+            
+            <div id="voucher-output">
+                <div class="voucher-printable-area">
+                    <!-- Academy Copy -->
+                    <div class="voucher-copy">
+                        <div class="voucher-header">
+                            <img src="logo.png" alt="Academy Logo">
+                            <div class="academy-info">
+                                <h3>Unique Science Academy</h3><p>Perseverance commands success</p>
+                            </div>
+                        </div>
+                        <p class="voucher-title">Academy Copy</p>
+                        <table class="details-table">
+                            <tr><td>Roll No:</td><td><span id="v-rollNumber-academy"></span></td></tr>
+                            <tr><td>Student:</td><td><span id="v-studentName-academy"></span></td></tr>
+                            <tr><td>Father:</td><td><span id="v-fatherName-academy"></span></td></tr>
+                            <tr><td>Fee Month:</td><td><span id="v-month-academy"></span></td></tr>
+                            <tr><td>Due Date:</td><td><span id="v-dueDate-academy"></span></td></tr>
+                        </table>
+                        <table class="fee-table">
+                            <tr><td>Tuition Fee</td><td align="right">PKR <span id="v-fees-academy"></span></td></tr>
+                            <tr><td>Scholarship</td><td align="right">- PKR <span id="v-scholarship-academy"></span></td></tr>
+                            <tr><td>Fine</td><td align="right">+ PKR <span id="v-fine-academy"></span></td></tr>
+                            <tr class="total-row"><td>Total Payable</td><td align="right">PKR <span id="v-total-academy"></span></td></tr>
+                        </table>
+                        <div class="voucher-footer"><div class="signature-area">Accounts Office Signature</div></div>
+                    </div>
+                    <!-- Student Copy -->
+                    <div class="voucher-copy">
+                        <div class="voucher-header">
+                            <img src="logo.png" alt="Academy Logo">
+                            <div class="academy-info">
+                                <h3>Unique Science Academy</h3><p>Perseverance commands success</p>
+                            </div>
+                        </div>
+                        <p class="voucher-title">Student Copy</p>
+                         <table class="details-table">
+                            <tr><td>Roll No:</td><td><span id="v-rollNumber-student"></span></td></tr>
+                            <tr><td>Student:</td><td><span id="v-studentName-student"></span></td></tr>
+                            <tr><td>Father:</td><td><span id="v-fatherName-student"></span></td></tr>
+                            <tr><td>Fee Month:</td><td><span id="v-month-student"></span></td></tr>
+                            <tr><td>Due Date:</td><td><span id="v-dueDate-student"></span></td></tr>
+                        </table>
+                        <table class="fee-table">
+                            <tr><td>Tuition Fee</td><td align="right">PKR <span id="v-fees-student"></span></td></tr>
+                            <tr><td>Scholarship</td><td align="right">- PKR <span id="v-scholarship-student"></span></td></tr>
+                            <tr><td>Fine</td><td align="right">+ PKR <span id="v-fine-student"></span></td></tr>
+                            <tr class="total-row"><td>Total Payable</td><td align="right">PKR <span id="v-total-student"></span></td></tr>
+                        </table>
+                        <div class="voucher-footer"><div class="signature-area">Cashier's Signature</div></div>
+                    </div>
+                </div>
+            </div>
+            <div id="print-btn-container">
+                <button id="print-btn" class="action-button">Print Voucher</button>
+            </div>
+            <div class="page-footer">Software Developed by Abdullah Hashmi</div>
+        </div>
+
+        <!-- =========== STUDENTS DATABASE PAGE =========== -->
+        <div id="students-db-page" class="page-content">
+            <div class="page-header">
+                <img src="logo.png" alt="Academy Logo" class="page-logo">
+                <h2>Student Database</h2>
+            </div>
+            <form id="student-db-form">
+                <div class="form-grid">
+                    <div class="form-group"><label for="sdb-name">Student Name</label><input type="text" id="sdb-name" required></div>
+                    <div class="form-group"><label for="sdb-father">Father's Name</label><input type="text" id="sdb-father" required></div>
+                    <div class="form-group"><label for="sdb-roll">Roll Number</label><input type="text" id="sdb-roll" required></div>
+                    <div class="form-group"><label for="sdb-contact">Contact Number</label><input type="tel" id="sdb-contact" required></div>
+                </div>
+                <button type="submit" class="action-button">Add Student</button>
+            </form>
+            <hr style="margin: 30px 0; border: 1px solid #eee;">
+            <h3>Saved Students</h3>
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Father's Name</th><th>Roll No.</th><th>Contact</th><th>Action</th></tr></thead>
+                <tbody id="student-db-table-body"></tbody>
+            </table>
+            <div class="page-footer">Software Developed by Abdullah Hashmi</div>
+        </div>
+
+        <!-- =========== TEACHERS DATABASE PAGE =========== -->
+        <div id="teachers-db-page" class="page-content">
+             <div class="page-header">
+                <img src="logo.png" alt="Academy Logo" class="page-logo">
+                <h2>Teachers Database</h2>
+            </div>
+            <form id="teacher-db-form">
+                <div class="form-grid">
+                    <div class="form-group"><label for="tdb-name">Teacher's Name</label><input type="text" id="tdb-name" required></div>
+                    <div class="form-group"><label for="tdb-qual">Qualification</label><input type="text" id="tdb-qual" required></div>
+                    <div class="form-group"><label for="tdb-salary">Salary (PKR)</label><input type="number" id="tdb-salary" required></div>
+                </div>
+                <button type="submit" class="action-button">Add Teacher</button>
+            </form>
+            <hr style="margin: 30px 0; border: 1px solid #eee;">
+            <h3>Saved Teachers</h3>
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Qualification</th><th>Salary</th><th>Action</th></tr></thead>
+                <tbody id="teacher-db-table-body"></tbody>
+            </table>
+            <div class="page-footer">Software Developed by Abdullah Hashmi</div>
+        </div>
+        
+        <!-- =========== ATTENDANCE PAGE =========== -->
+        <div id="attendance-page" class="page-content">
+            <div class="page-header">
+                <img src="logo.png" alt="Academy Logo" class="page-logo">
+                <h2>Teacher Attendance Book</h2>
+            </div>
+            
+            <div class="attendance-form-group">
+                <label for="teacher-attendance-date">Date:</label>
+                <input type="date" id="teacher-attendance-date">
+                <button id="load-teacher-attendance-btn" class="action-button" style="width:auto; margin-top:0; padding: 10px 15px;">Load Teachers</button>
+            </div>
+            <form id="teacher-attendance-form">
+                <table class="data-table">
+                    <thead><tr><th>Teacher Name</th><th>Arrival Time</th><th>Departure Time</th></tr></thead>
+                    <tbody id="teacher-attendance-table-body"></tbody>
+                </table>
+                <button type="submit" class="action-button">Save Teacher Attendance</button>
+            </form>
+
+            <div class="page-footer">Software Developed by Abdullah Hashmi</div>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // =================================================================
+            // CORE APP LOGIC (TABS, LOCALSTORAGE)
+            // =================================================================
+            const tabs = document.querySelectorAll('.nav-tab');
+            const pages = document.querySelectorAll('.page-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    pages.forEach(p => p.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.target).classList.add('active');
+                });
+            });
+
+            const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+            const loadData = (key) => {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            };
+
+            // =================================================================
+            // VOUCHER GENERATOR LOGIC
+            // =================================================================
+            const voucherForm = document.getElementById('voucher-form');
+            voucherForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const studentName = document.getElementById('studentName').value;
+                const fatherName = document.getElementById('fatherName').value;
+                const rollNumber = document.getElementById('rollNumber').value;
+                const monthInput = document.getElementById('month').value;
+                const dueDateInput = document.getElementById('dueDate').value;
+                const fees = parseFloat(document.getElementById('fees').value) || 0;
+                const scholarship = parseFloat(document.getElementById('scholarship').value) || 0;
+                const fine = parseFloat(document.getElementById('fine').value) || 0;
+                const total = fees - scholarship + fine;
+                const date = new Date(monthInput + '-02');
+                const monthFormatted = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                const dueDate = new Date(dueDateInput);
+                const dueDateFormatted = dueDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const data = {
+                    rollNumber, studentName, fatherName, month: monthFormatted, dueDate: dueDateFormatted,
+                    fees: fees.toFixed(2), scholarship: scholarship.toFixed(2), fine: fine.toFixed(2), total: total.toFixed(2)
+                };
+                ['academy', 'student'].forEach(copy => {
+                    document.getElementById(`v-rollNumber-${copy}`).textContent = data.rollNumber;
+                    document.getElementById(`v-studentName-${copy}`).textContent = data.studentName;
+                    document.getElementById(`v-fatherName-${copy}`).textContent = data.fatherName;
+                    document.getElementById(`v-month-${copy}`).textContent = data.month;
+                    document.getElementById(`v-dueDate-${copy}`).textContent = data.dueDate;
+                    document.getElementById(`v-fees-${copy}`).textContent = data.fees;
+                    document.getElementById(`v-scholarship-${copy}`).textContent = data.scholarship;
+                    document.getElementById(`v-fine-${copy}`).textContent = data.fine;
+                    document.getElementById(`v-total-${copy}`).textContent = data.total;
+                });
+                document.getElementById('voucher-output').style.display = 'block';
+                document.getElementById('print-btn').style.display = 'block';
+            });
+            document.getElementById('print-btn').addEventListener('click', () => window.print());
+
+            // =================================================================
+            // STUDENT DATABASE LOGIC
+            // =================================================================
+            const studentDbForm = document.getElementById('student-db-form');
+            const studentTableBody = document.getElementById('student-db-table-body');
+            const STUDENTS_DB_KEY = 'studentsDB';
+
+            const renderStudentTable = () => {
+                studentTableBody.innerHTML = '';
+                const students = loadData(STUDENTS_DB_KEY);
+                students.forEach((student, index) => {
+                    const row = studentTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>${student.fatherName}</td>
+                        <td>${student.roll}</td>
+                        <td>${student.contact}</td>
+                        <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+                    `;
+                });
+            };
+
+            studentDbForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newStudent = {
+                    name: document.getElementById('sdb-name').value,
+                    fatherName: document.getElementById('sdb-father').value,
+                    roll: document.getElementById('sdb-roll').value,
+                    contact: document.getElementById('sdb-contact').value
+                };
+                const students = loadData(STUDENTS_DB_KEY);
+                students.push(newStudent);
+                saveData(STUDENTS_DB_KEY, students);
+                renderStudentTable();
+                studentDbForm.reset();
+            });
+
+            studentTableBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.dataset.index;
+                    let students = loadData(STUDENTS_DB_KEY);
+                    students.splice(index, 1);
+                    saveData(STUDENTS_DB_KEY, students);
+                    renderStudentTable();
+                }
+            });
+
+            // =================================================================
+            // TEACHER DATABASE LOGIC
+            // =================================================================
+            const teacherDbForm = document.getElementById('teacher-db-form');
+            const teacherTableBody = document.getElementById('teacher-db-table-body');
+            const TEACHERS_DB_KEY = 'teachersDB';
+
+            const renderTeacherTable = () => {
+                teacherTableBody.innerHTML = '';
+                const teachers = loadData(TEACHERS_DB_KEY);
+                teachers.forEach((teacher, index) => {
+                    const row = teacherTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${teacher.name}</td>
+                        <td>${teacher.qual}</td>
+                        <td>${teacher.salary}</td>
+                        <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+                    `;
+                });
+            };
+            
+            teacherDbForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newTeacher = {
+                    name: document.getElementById('tdb-name').value,
+                    qual: document.getElementById('tdb-qual').value,
+                    salary: document.getElementById('tdb-salary').value,
+                };
+                const teachers = loadData(TEACHERS_DB_KEY);
+                teachers.push(newTeacher);
+                saveData(TEACHERS_DB_KEY, teachers);
+                renderTeacherTable();
+                teacherDbForm.reset();
+            });
+
+            teacherTableBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const index = e.target.dataset.index;
+                    let teachers = loadData(TEACHERS_DB_KEY);
+                    teachers.splice(index, 1);
+                    saveData(TEACHERS_DB_KEY, teachers);
+                    renderTeacherTable();
+                }
+            });
+            
+            // =================================================================
+            // TEACHER ATTENDANCE LOGIC
+            // =================================================================
+            document.getElementById('teacher-attendance-date').valueAsDate = new Date();
+            const teacherAttendanceTBody = document.getElementById('teacher-attendance-table-body');
+            
+             document.getElementById('load-teacher-attendance-btn').addEventListener('click', () => {
+                const teachers = loadData(TEACHERS_DB_KEY);
+                teacherAttendanceTBody.innerHTML = '';
+                teachers.forEach(teacher => {
+                    const row = teacherAttendanceTBody.insertRow();
+                    const teacherId = teacher.name.replace(/\s/g, ''); // Create a safe ID
+                    row.innerHTML = `
+                        <td>${teacher.name}</td>
+                        <td><input type="time" name="arrival-${teacherId}"></td>
+                        <td><input type="time" name="departure-${teacherId}"></td>
+                    `;
+                });
+            });
+
+            // Note: The 'Save Teacher Attendance' button currently doesn't save the data.
+            // This would require a more complex storage solution to save attendance by date.
+            // For now, it allows for data entry and could be printed.
+
+            // =================================================================
+            // INITIALIZATION
+            // =================================================================
+            renderStudentTable();
+            renderTeacherTable();
+        });
+    </script>
+</body>
+</html>
